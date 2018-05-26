@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <springProfile name="standalone">
+
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%boldMagenta(%d{yyyy-MM-dd HH:mm:ss:SSS}) %green([%thread]) %highlight(%-5level) %cyan(%logger{15}.%M\(\)) - %boldYellow(%msg %n)</pattern>
+            </encoder>
+        </appender>
+        <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+            <file>sender.log</file>
+            <append>true</append>
+            <!-- set immediateFlush to false for much higher logging throughput -->
+            <immediateFlush>true</immediateFlush>
+            <!-- encoders are assigned the type
+                 ch.qos.logback.classic.encoder.PatternLayoutEncoder by default -->
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS} [%thread] %-5level %logger{15}.%M\(\) - %msg %n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="FILE"/>
+        </root>
+        <logger name="ru.siblion.crm" level="DEBUG" additivity="false">
+            <appender-ref ref="stdout"/>
+            <appender-ref ref="FILE"/>
+        </logger>
+    </springProfile>
+
+    <springProfile name="wildfly">
+
+        <appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>%d{yyyy-MM-dd HH:mm:ss:SSS}) [%thread] %-5level %logger{15}.%M\(\) - %msg %n</pattern>
+            </encoder>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="stdout"/>
+        </root>
+        <logger name="ru.siblion.crm" level="DEBUG" additivity="false">
+            <appender-ref ref="stdout"/>
+        </logger>
+    </springProfile>
+</configuration>
