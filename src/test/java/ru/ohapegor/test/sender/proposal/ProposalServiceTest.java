@@ -29,10 +29,9 @@ class ProposalServiceTest {
         ProposalDTO dto = testProposal();
         dto.setId(100000L);
         dto.setCallData(null);
-        dto.setEmailData(null);
         dto.setSmsData(null);
         dto.setAttachments(null);
-        dto.setName("modifyed");
+        dto.setName("modified");
 
         System.out.println("service.edit(dto) = " + service.edit(dto));
     }
@@ -59,21 +58,26 @@ class ProposalServiceTest {
 
     @Test
     void assignProposalToCampaign() {
-        System.out.println("service.assignProposalToCampaign(100000L,1L) = " + service.assignProposalToCampaign(100000L,1L));
+        System.out.println("service.assignProposalToCampaign(100000L,1L) = " + service.assignProposalToCampaign(100000L, 1L));
     }
 
-    private SMSDataDTO testSmsData(){
+    private SMSDataDTO testSmsData() {
         return new SMSDataDTO(null, "test", Collections.singletonList(testAttachment()));
     }
-    private CallDataDTO testCallData(){
+
+    private CallDataDTO testCallData() {
         return new CallDataDTO(null, "test_call", Collections.singletonList(testAttachment()));
     }
 
     private EmailDataDTO testEmailData() {
-        return new EmailDataDTO(null, "title", "senderName", "email", "<h1>Hello</>".getBytes(Charset.forName("UTF-8")), "test", Collections.singletonList(testAttachment()));
+        return new EmailDataDTO(null, "title", "senderName", "email", ("<h1>Hello {{ Name }} {{ email }}</h1>" +
+                "<br/><p>testId {{ clientId }} </p>" +
+                "<br/><p><a href=\"http://www.siblion.ru/\">Сходи в сиблион</a></p>" +
+                "<br/><p>testPhone {{ phone }} </p>"
+        ).getBytes(Charset.forName("UTF-8")), "test", Collections.singletonList(testAttachment()));
     }
 
-    private ProposalDTO testProposal(){
+    private ProposalDTO testProposal() {
         return new ProposalDtoBuilder()
                 .code("testCode")
                 .createdBy("egor")
