@@ -30,8 +30,9 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
 
-        <api.dispatch.version>1.0.0-SNAPSHOT</api.dispatch.version>
-        <api.proposal.version>1.0.0-SNAPSHOT</api.proposal.version>
+        <api.dispatch.version>1.0.1-SNAPSHOT</api.dispatch.version>
+        <api.proposal.version>1.0.1-SNAPSHOT</api.proposal.version>
+        <api.campaign.version>1.0.1-SNAPSHOT</api.campaign.version>
 
         <!--logging-->
         <logback.version>1.2.3</logback.version>
@@ -105,6 +106,12 @@
             <groupId>ru.siblion.crm</groupId>
             <artifactId>crm-sender-api-dispatch</artifactId>
             <version>${api.dispatch.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>ru.siblion.crm</groupId>
+            <artifactId>crm-campaign-manager-api</artifactId>
+            <version>${api.campaign.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
