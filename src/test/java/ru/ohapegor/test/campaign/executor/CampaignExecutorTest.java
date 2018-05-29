@@ -21,6 +21,7 @@ class CampaignExecutorTest {
 
     @Test
     void collectStatistics() {
+        System.out.println(executor.collectStatistics(campId));
     }
 
     @Test

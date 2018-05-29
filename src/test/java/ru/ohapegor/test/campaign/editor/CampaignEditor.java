@@ -104,9 +104,10 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
     }
 
     @Override
-    public CMResponse assignSource(Long campId, MappingDTO mappingDTO) {
+    public CMResponse assignSource(Long campId,Long sourceId, MappingDTO mappingDTO) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.ASSIGN_SOURCE)
                 .queryParam(QueryParams.CAMP_ID, campId)
+                .queryParam(QueryParams.SOURCE_ID, sourceId)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
@@ -147,5 +148,10 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
         return restTemplate
                 .postForEntity(URL,null,
                         CMResponse.class).getBody();
+    }
+
+    @Override
+    public CMResponse changeChannel(Long aLong, ChannelType channelType) {
+        return null;
     }
 }

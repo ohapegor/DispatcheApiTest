@@ -70,10 +70,11 @@ class ProposalServiceTest {
     }
 
     private EmailDataDTO testEmailData() {
-        return new EmailDataDTO(null, "title", "senderName", "email", ("<h1>Hello {{ Name }} {{ email }}</h1>" +
-                "<br/><p>testId {{ clientId }} </p>" +
+        return new EmailDataDTO(null, "test_mail", "siblion", "email", ("<h1>Привет {{firstname}}, твой любымый цвет {{color}}?</h1>" +
+                "<br/><p>Мы дарим тебе <b>{{check}}</b> баллов на твой день рождения- {{birthday}} </p>" +
+                "<br/><p>P.S. твой Id - {{client_id}} </p>" +
                 "<br/><p><a href=\"http://www.siblion.ru/\">Сходи в сиблион</a></p>" +
-                "<br/><p>testPhone {{ phone }} </p>"
+                "<br/><p><b>Это не спам!</b></p>"
         ).getBytes(Charset.forName("UTF-8")), "test", Collections.singletonList(testAttachment()));
     }
 

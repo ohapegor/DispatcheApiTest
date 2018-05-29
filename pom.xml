@@ -32,7 +32,7 @@
 
         <api.dispatch.version>1.0.1-SNAPSHOT</api.dispatch.version>
         <api.proposal.version>1.0.1-SNAPSHOT</api.proposal.version>
-        <api.campaign.version>1.0.1-SNAPSHOT</api.campaign.version>
+        <api.campaign.version>1.0.2-SNAPSHOT</api.campaign.version>
 
         <!--logging-->
         <logback.version>1.2.3</logback.version>

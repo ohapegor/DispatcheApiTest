@@ -48,43 +48,54 @@ class CampaignEditorTest {
 
     @Test
     void assignAudience() {
-        System.out.println(campaignEditor.assignAudience(campId,87L));
+        System.out.println(campaignEditor.assignAudience(campId, 100022L));
     }
 
     @Test
     void unassignAudience() {
+            System.out.println(campaignEditor.unassignAudience(campId));
     }
 
     @Test
     void assignSource() {
         MappingFieldDTO id = new MappingFieldDTO(
-                "PCODE",
+                "CLIENTS_PCODE",
                 MappingFieldType.SYSTEM_FIELD,
                 new ResultDataDTO(CLIENT_ID.name(),
                         MappingDataType.INTEGER), null);
         MappingFieldDTO phone = new MappingFieldDTO(
-                "PHONE",
+                "CALL_TRACKING_PHONE",
                 MappingFieldType.SYSTEM_FIELD,
                 new ResultDataDTO(PHONE.name(),
                         MappingDataType.STRING), null);
         MappingFieldDTO email = new MappingFieldDTO(
-                "CLMAIL",
+                "CLIENTS_CLMAIL",
                 MappingFieldType.SYSTEM_FIELD,
                 new ResultDataDTO(EMAIL.name(),
                         MappingDataType.STRING), null);
         MappingFieldDTO name = new MappingFieldDTO(
-                "F_NAME",
+                "CLIENTS_FIRSTNAME",
                 MappingFieldType.USER_FIELD,
                 new ResultDataDTO("FirstName",
                         MappingDataType.STRING), null);
+        /*MappingFieldDTO birthday = new MappingFieldDTO(
+                "B_DATE",
+                MappingFieldType.USER_FIELD,
+                new ResultDataDTO("birthday",
+                        MappingDataType.DATE), "yyyy-MM-dd HH:mm:ss");
+        MappingFieldDTO check = new MappingFieldDTO(
+                "AVG_SUM",
+                MappingFieldType.USER_FIELD,
+                new ResultDataDTO("check",
+                        MappingDataType.DOUBLE), null);
         MappingFieldDTO color = new MappingFieldDTO(
                 "любимый цвет",
                 MappingFieldType.USER_FIELD,
                 new ResultDataDTO("Color",
-                        MappingDataType.STRING), null);
+                        MappingDataType.STRING), null);*/
 
-        System.out.println(campaignEditor.assignSource(campId,
-                new MappingDTO(19L, Arrays.asList(id, phone, email, name, color))));
+        System.out.println(campaignEditor.assignSource(campId,100000L,
+                new MappingDTO( Arrays.asList(id, phone, email, name))));
     }
 
     @Test
@@ -111,6 +122,7 @@ class CampaignEditorTest {
                 .endResponseCollectDate(ZonedDateTime.now().plusMonths(1).plusWeeks(1))
                 .channel(ChannelType.EMAIL)
                 .createdBy("egor")
+                .controlGroupPercent(50.0)
                 .proposalId(777L)
                 .language("ru")
                 .build();

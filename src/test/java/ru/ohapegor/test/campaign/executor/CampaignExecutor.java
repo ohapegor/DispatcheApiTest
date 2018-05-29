@@ -5,13 +5,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 import ru.ohapegor.test.campaign.editor.CampaignEditor;
-import ru.siblion.crm.campaign.manager.api.CMCampaignExecutorApi;
+import ru.siblion.crm.campaign.manager.api.CMCampaignExecutorRestApi;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestExecutorEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.QueryParams;
 import ru.siblion.crm.campaign.manager.api.response.CMResponse;
 
-public class CampaignExecutor implements CMCampaignExecutorApi {
+public class CampaignExecutor implements CMCampaignExecutorRestApi {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
