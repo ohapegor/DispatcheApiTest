@@ -25,6 +25,15 @@ class CampaignEditorTest {
     private static final Long campId = 100000L;
 
     @Test
+    void createNewCampaign(){
+        Long campId = campaignEditor.createCampaign(testCampaign()).getId();
+            System.out.println(campaignEditor.assignAudience(campId, 100028L));
+        System.out.println(campaignEditor.assignSource(campId,100006L,
+                testMapping()));
+        System.out.println(campaignEditor.assignProposal(campId, 100000L, ChannelType.EMAIL));
+    }
+
+    @Test
     void createCampaign() {
         System.out.println(campaignEditor.createCampaign(testCampaign()));
     }
@@ -48,7 +57,7 @@ class CampaignEditorTest {
 
     @Test
     void assignAudience() {
-        System.out.println(campaignEditor.assignAudience(campId, 100022L));
+        System.out.println(campaignEditor.assignAudience(campId, 100028L));
     }
 
     @Test
@@ -58,6 +67,11 @@ class CampaignEditorTest {
 
     @Test
     void assignSource() {
+        System.out.println(campaignEditor.assignSource(campId,100006L,
+                testMapping()));
+    }
+
+    private MappingDTO testMapping(){
         MappingFieldDTO id = new MappingFieldDTO(
                 "CLIENTS_PCODE",
                 MappingFieldType.SYSTEM_FIELD,
@@ -93,9 +107,7 @@ class CampaignEditorTest {
                 MappingFieldType.USER_FIELD,
                 new ResultDataDTO("Color",
                         MappingDataType.STRING), null);*/
-
-        System.out.println(campaignEditor.assignSource(campId,100000L,
-                new MappingDTO( Arrays.asList(id, phone, email, name))));
+         return        new MappingDTO( Arrays.asList(id, phone, email, name));
     }
 
     @Test
