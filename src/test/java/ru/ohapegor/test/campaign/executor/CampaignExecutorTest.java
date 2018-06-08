@@ -12,6 +12,7 @@ class CampaignExecutorTest {
 
     @Test
     void scheduleStart() {
+        System.out.println(executor.scheduleStart(campId));
     }
 
     @Test
@@ -26,5 +27,11 @@ class CampaignExecutorTest {
 
     @Test
     void stop() {
+        System.out.println(executor.stop(campId));
+    }
+
+    @Test
+    void finish() {
+        System.out.println(executor.finish(campId));
     }
 }

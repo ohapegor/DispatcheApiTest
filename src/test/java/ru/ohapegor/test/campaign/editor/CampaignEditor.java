@@ -12,10 +12,11 @@ import ru.siblion.crm.campaign.manager.api.constants.QueryParams;
 import ru.siblion.crm.campaign.manager.api.dto.CampaignDTO;
 import ru.siblion.crm.campaign.manager.api.dto.MappingDTO;
 import ru.siblion.crm.campaign.manager.api.dto.enums.ChannelType;
-import ru.siblion.crm.campaign.manager.api.response.CMResponse;
-import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
-import ru.siblion.crm.campaign.manager.api.response.GetAllCampaignResponse;
-import ru.siblion.crm.campaign.manager.api.response.GetCampaignByIdResponse;
+import ru.siblion.crm.campaign.manager.api.dto.enums.Queues;
+import ru.siblion.crm.campaign.manager.api.response.*;
+
+import java.util.EnumSet;
+import java.util.Set;
 
 public class CampaignEditor implements CMCampaignEditorRestApi {
 
@@ -104,29 +105,6 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
     }
 
     @Override
-    public CMResponse assignSource(Long campId,Long sourceId, MappingDTO mappingDTO) {
-        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.ASSIGN_SOURCE)
-                .queryParam(QueryParams.CAMP_ID, campId)
-                .queryParam(QueryParams.SOURCE_ID, sourceId)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,mappingDTO,
-                        CMResponse.class).getBody();
-    }
-
-    @Override
-    public CMResponse unassignSource(Long campId) {
-        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.UNASSIGN_SOURCE)
-                .queryParam(QueryParams.CAMP_ID, campId)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,null,
-                        CMResponse.class).getBody();
-    }
-
-    @Override
     public CMResponse assignProposal(Long campId, Long propId, ChannelType channelType) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.ASSIGN_PROPOSAL)
                 .queryParam(QueryParams.CAMP_ID, campId)
@@ -153,5 +131,49 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
     @Override
     public CMResponse changeChannel(Long aLong, ChannelType channelType) {
         return null;
+    }
+
+    @Override
+    public CMResponse assignSource(Long campId, MappingDTO mappingDTO) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.ASSIGN_SOURCE)
+                .queryParam(QueryParams.CAMP_ID, campId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .postForEntity(URL,mappingDTO,
+                        CMResponse.class).getBody();
+    }
+
+    @Override
+    public CMResponse unassignSource(Long campId) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.UNASSIGN_SOURCE)
+                .queryParam(QueryParams.CAMP_ID, campId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .postForEntity(URL,null,
+                        CMResponse.class).getBody();
+    }
+
+    @Override
+    public ShowFieldsResponse showFields(Long campId) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.SHOW_FIELDS)
+                .queryParam(QueryParams.CAMP_ID, campId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .getForEntity(URL,
+                        ShowFieldsResponse.class).getBody();
+    }
+
+    @Override
+    public CMResponse setCampaignQueues(Long campId, Set<Queues> enumSet) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.CHANGE_QUEUES)
+                .queryParam(QueryParams.CAMP_ID, campId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .postForEntity(URL,enumSet,
+                        CMResponse.class).getBody();
     }
 }

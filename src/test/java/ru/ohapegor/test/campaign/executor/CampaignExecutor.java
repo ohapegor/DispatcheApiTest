@@ -64,4 +64,15 @@ public class CampaignExecutor implements CMCampaignExecutorRestApi {
                 .getForEntity(URL,
                         CMResponse.class).getBody();
     }
+
+    @Override
+    public CMResponse finish(Long campId) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EXECUTOR_ENDPOINT + CMRestExecutorEndpoints.FINISH)
+                .queryParam(QueryParams.CAMP_ID,campId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .getForEntity(URL,
+                        CMResponse.class).getBody();
+    }
 }
