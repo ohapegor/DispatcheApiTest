@@ -1,43 +1,98 @@
 package ru.ohapegor.test.campaign.admin;
 
 import org.junit.jupiter.api.Test;
-import ru.siblion.crm.campaign.manager.api.dto.MappingDTO;
-import ru.siblion.crm.campaign.manager.api.dto.MappingFieldDTO;
-import ru.siblion.crm.campaign.manager.api.dto.ResultDataDTO;
-import ru.siblion.crm.campaign.manager.api.dto.enums.MappingDataType;
-import ru.siblion.crm.campaign.manager.api.dto.enums.MappingFieldType;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.enums.ChannelType;
+import ru.siblion.crm.campaign.manager.api.dto.efficency.enums.AggregateType;
+import ru.siblion.crm.campaign.manager.api.dto.efficency.mapping.ResultMappingDTO;
+import ru.siblion.crm.campaign.manager.api.dto.efficency.mapping.ResultMappingFieldDTO;
+import ru.siblion.crm.campaign.manager.api.dto.efficency.mapping.ResultMappingFieldType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingFieldDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.ResultDataDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingDataType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingFieldType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SourcePurpose;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SystemFields;
+import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
+import ru.siblion.crm.campaign.manager.api.response.ResponseStatus;
 
+import java.time.ZonedDateTime;
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.CLIENT_ID;
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.EMAIL;
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.PHONE;
+import static org.junit.jupiter.api.Assertions.assertSame;
+
 
 class CMAdminkaTest {
 
     private static final Long sourceId = 100000L;
 
+    private Long mappingId = 100001L;
+
     private CMAdminka adminka = new CMAdminka();
 
     @Test
-    void assignPesronalDataSource() {
-        System.out.println(adminka.assignPersonalDataSource(testMapping()));
+    void setupSources(){
+        MappingDTO mappingDTO = testMapping();
+        mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
+        mappingDTO.setSourcePurpose(SourcePurpose.PERSONAL);
+
+        CreateEntityResponse response1 = adminka.addGlobalDataSource(mappingDTO);
+        assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
+        assertSame(adminka.activateDataSource(response1.getId()).getStatus(),ResponseStatus.SUCCESS);
+
+
+
+        mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
+        mappingDTO.setSourcePurpose(SourcePurpose.SCHEDULE);
+        CreateEntityResponse response3 = adminka.addGlobalDataSource(mappingDTO);
+        assertSame(response3.getStatus(),ResponseStatus.SUCCESS);
+        assertSame(adminka.activateDataSource(response3.getId()).getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
-    void unassignPesronalDataSource() {
-        System.out.println(adminka.unassignPersonalDataSource());
+    void assignPersonalSource(){
+        MappingDTO mappingDTO = testMapping();
+        mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
+        mappingDTO.setSourcePurpose(SourcePurpose.PERSONAL);
+        CreateEntityResponse response = adminka.addGlobalDataSource(mappingDTO);
+        System.out.println(response);
+        assertSame(response.getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
-    void assignScheduleDataSource() {
-        System.out.println(adminka.assignScheduleDataSource(testMapping()));
+    void assignReportlSources(){
+        ResultMappingDTO resultMappingDTO = testResultMapping1();
+        CreateEntityResponse response1 = adminka.addGlobalResultDataSource(resultMappingDTO);
+        System.out.println(response1);
+        assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
+
+        ResultMappingDTO resultMappingDTO2 = testResultMapping2();
+        CreateEntityResponse response2 = adminka.addGlobalResultDataSource(resultMappingDTO2);
+        System.out.println(response2);
+        assertSame(response2.getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
-    void unassignScheduleSource() {
-        System.out.println(adminka.unassignScheduleSource());
+    void assignScheduleSource(){
+        MappingDTO mappingDTO = testMapping();
+        mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
+        mappingDTO.setSourcePurpose(SourcePurpose.SCHEDULE);
+        System.out.println(adminka.addGlobalDataSource(mappingDTO));
+    }
+
+    @Test
+    void activateGlobalPersonalSource(){
+        System.out.println(adminka.activateDataSource(100001L));
+    }
+
+    @Test
+    void activateGlobalReportlSource(){
+        System.out.println(adminka.activateDataSource(100002L));
+    }
+
+    @Test
+    void activateScheduleReportlSource(){
+        System.out.println(adminka.activateDataSource(100003L));
     }
 
     @Test
@@ -45,47 +100,80 @@ class CMAdminkaTest {
         System.out.println(adminka.showAdminData());
     }
 
+
     @Test
     void showFields() {
         System.out.println(adminka.showFields());
     }
 
     private MappingDTO testMapping() {
-        MappingFieldDTO id = new MappingFieldDTO(
-                "CLIENTS_PCODE",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(CLIENT_ID.name(),
-                        MappingDataType.INTEGER), null);
-        MappingFieldDTO phone = new MappingFieldDTO(
-                "CALL_TRACKING_PHONE",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(PHONE.name(),
-                        MappingDataType.STRING), null);
-        MappingFieldDTO email = new MappingFieldDTO(
-                "CLIENTS_CLMAIL",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(EMAIL.name(),
-                        MappingDataType.STRING), null);
-        MappingFieldDTO name = new MappingFieldDTO(
-                "CLIENTS_FIRSTNAME",
-                MappingFieldType.USER_FIELD,
-                new ResultDataDTO("FirstName",
-                        MappingDataType.STRING), null);
-        /*MappingFieldDTO birthday = new MappingFieldDTO(
-                "B_DATE",
-                MappingFieldType.USER_FIELD,
-                new ResultDataDTO("birthday",
-                        MappingDataType.DATE), "yyyy-MM-dd HH:mm:ss");
-        MappingFieldDTO check = new MappingFieldDTO(
-                "AVG_SUM",
-                MappingFieldType.USER_FIELD,
-                new ResultDataDTO("check",
-                        MappingDataType.DOUBLE), null);
-        MappingFieldDTO color = new MappingFieldDTO(
-                "любимый цвет",
-                MappingFieldType.USER_FIELD,
-                new ResultDataDTO("Color",
-                        MappingDataType.STRING), null);*/
-        return new MappingDTO(sourceId, Arrays.asList(id, phone, email, name));
+        MappingFieldDTO id = new MappingFieldDTO();
+        id.setSourceName("CLIENTS_PCODE");
+        id.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        id.setResultData(new ResultDataDTO(SystemFields.CLIENT_ID.name(), MappingDataType.INTEGER));
+
+        MappingFieldDTO phone = new MappingFieldDTO();
+        phone.setSourceName("CALL_TRACKING_PHONE");
+        phone.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        phone.setResultData(new ResultDataDTO(SystemFields.PHONE.name(), MappingDataType.STRING));
+
+        MappingFieldDTO email = new MappingFieldDTO();
+        email.setSourceName("CLIENTS_CLMAIL");
+        email.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        email.setResultData(new ResultDataDTO(ChannelType.EMAIL.name(), MappingDataType.STRING));
+
+        MappingFieldDTO name = new MappingFieldDTO();
+        name.setSourceName("CLIENTS_FIRSTNAME");
+        name.setMappingFieldType(MappingFieldType.USER_FIELD);
+        name.setResultData(new ResultDataDTO("FirstName", MappingDataType.STRING));
+
+        MappingDTO mappingDTO = new MappingDTO();
+        mappingDTO.setSourceId(sourceId);
+        mappingDTO.setFields(Arrays.asList(id, phone, email, name));
+        return mappingDTO;
+    }
+
+    private ResultMappingDTO testResultMapping1(){
+        ResultMappingDTO mapping = new ResultMappingDTO();
+
+        ResultMappingFieldDTO id = new ResultMappingFieldDTO();
+        id.setResultMappingFieldType(ResultMappingFieldType.CLIENT_ID.CLIENT_ID);
+        id.setSourceFieldName("CLIENTS_PCODE");
+
+        ResultMappingFieldDTO summ = new ResultMappingFieldDTO();
+        summ.setResultMappingFieldType(ResultMappingFieldType.AGGREGATE);
+        summ.setAggregateType(AggregateType.SUMM);
+        summ.setSourceFieldName("CLIENTS_POL");
+
+        ResultMappingFieldDTO filter = new ResultMappingFieldDTO();
+        filter.setResultMappingFieldType(ResultMappingFieldType.FILTER);
+        filter.setSourceFieldName("CLIENTS_FIRSTNAME");
+
+        mapping.setSourceId(sourceId);
+        mapping.setName("test_result_source");
+        mapping.setFields(Arrays.asList(id,summ,filter));
+        return mapping;
+    }
+
+    private ResultMappingDTO testResultMapping2(){
+        ResultMappingDTO mapping = new ResultMappingDTO();
+
+        ResultMappingFieldDTO id = new ResultMappingFieldDTO();
+        id.setResultMappingFieldType(ResultMappingFieldType.CLIENT_ID);
+        id.setSourceFieldName("CLIENTS_PCODE");
+
+        ResultMappingFieldDTO summ = new ResultMappingFieldDTO();
+        summ.setResultMappingFieldType(ResultMappingFieldType.AGGREGATE);
+        summ.setAggregateType(AggregateType.SUMM);
+        summ.setSourceFieldName("CLIENTS_FILIAL");
+
+        ResultMappingFieldDTO date = new ResultMappingFieldDTO();
+        date.setResultMappingFieldType(ResultMappingFieldType.DATE);
+        date.setSourceFieldName("CLIENTS_BDATE");
+
+        mapping.setSourceId(100038L);
+        mapping.setName("test_result_source2");
+        mapping.setFields(Arrays.asList(id,summ,date));
+        return mapping;
     }
 }

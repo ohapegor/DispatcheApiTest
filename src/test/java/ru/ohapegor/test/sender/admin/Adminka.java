@@ -32,37 +32,30 @@ public class Adminka implements SenderAdminRestApi {
     }
 
     @Override
-    public ProposalResponse changeDefaultSenderName(String s) {
-        String URL = UriComponentsBuilder.fromHttpUrl(ADMIN_ENDPOINT + AdminEndpoints.CHANGE_SENDER_NAME)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,
-                        s,
-                        ProposalResponse.class).getBody();
+    public ProposalResponse changeSenderName(String s) {
+        return null;
     }
 
     @Override
-    public ProposalResponse changeDefaultSenderEmail(String s) {
-        String URL = UriComponentsBuilder.fromHttpUrl(ADMIN_ENDPOINT + AdminEndpoints.CHANGE_SENDER_EMAIL)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,
-                        s,
-                        ProposalResponse.class).getBody();
+    public ProposalResponse changeSenderEmail(String s) {
+        return null;
     }
 
     @Override
-    public ProposalResponse changeDefaultSenderPhone(String s) {
-        String URL = UriComponentsBuilder.fromHttpUrl(ADMIN_ENDPOINT + AdminEndpoints.CHANGE_SENDER_PHONE)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,
-                        s,
-                        ProposalResponse.class).getBody();
+    public ProposalResponse changeDevinoSender(String s) {
+        return null;
     }
+
+    @Override
+    public ProposalResponse changeDevinoLogin(String s) {
+        return null;
+    }
+
+    @Override
+    public ProposalResponse changeDevinoPassword(String s) {
+        return null;
+    }
+
 
     @Override
     public GetAdminDataResponse getAdminData() {

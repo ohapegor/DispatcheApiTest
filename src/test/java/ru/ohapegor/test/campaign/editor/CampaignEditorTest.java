@@ -1,24 +1,32 @@
 package ru.ohapegor.test.campaign.editor;
 
 import org.junit.jupiter.api.Test;
-import ru.siblion.crm.campaign.manager.api.dto.CampaignDTO;
-import ru.siblion.crm.campaign.manager.api.dto.MappingDTO;
-import ru.siblion.crm.campaign.manager.api.dto.MappingFieldDTO;
-import ru.siblion.crm.campaign.manager.api.dto.ResultDataDTO;
-import ru.siblion.crm.campaign.manager.api.dto.builder.CampaignDTOBuilder;
-import ru.siblion.crm.campaign.manager.api.dto.enums.ChannelType;
-import ru.siblion.crm.campaign.manager.api.dto.enums.MappingDataType;
-import ru.siblion.crm.campaign.manager.api.dto.enums.MappingFieldType;
-import ru.siblion.crm.campaign.manager.api.dto.enums.Queues;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.CampaignDTO;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.CampaignDTOBuilder;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.enums.CampaignCategory;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.enums.CampaignType;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.enums.ChannelType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingFieldDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.ResultDataDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingDataType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingFieldType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SourcePurpose;
+import ru.siblion.crm.campaign.manager.api.dto.participant.enums.Queues;
+import ru.siblion.crm.campaign.manager.api.response.CMResponse;
+import ru.siblion.crm.campaign.manager.api.response.ResponseStatus;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.UUID;
 
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.CLIENT_ID;
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.EMAIL;
-import static ru.siblion.crm.campaign.manager.api.dto.enums.SystemFields.PHONE;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static ru.siblion.crm.campaign.manager.api.dto.campaign.enums.ChannelType.CALL;
+import static ru.siblion.crm.campaign.manager.api.dto.campaign.enums.ChannelType.EMAIL;
+import static ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SystemFields.CLIENT_ID;
+import static ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SystemFields.PHONE;
+
 
 class CampaignEditorTest {
 
@@ -26,7 +34,7 @@ class CampaignEditorTest {
 
     private static final Long campId = 100000L;
 
-    private static final Long audId = 100044L;
+    private static final Long audId = 100025L;
 
     private static final Long propId = 100000L;
 
@@ -35,10 +43,13 @@ class CampaignEditorTest {
     @Test
     void createNewCampaign() {
         Long campId = campaignEditor.createCampaign(testCampaign()).getId();
-        System.out.println(campaignEditor.assignAudience(campId, audId));
-        System.out.println(campaignEditor.assignSource(campId,
-                testMapping()));
-        System.out.println(campaignEditor.assignProposal(campId, propId, ChannelType.CALL));
+        CMResponse response1 = campaignEditor.assignAudience(campId, audId);
+        System.out.println(response1);
+        assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
+        // System.out.println(campaignEditor.assignSource(campId, testMapping()));
+        CMResponse response2 = campaignEditor.assignProposal(campId, propId, CALL);
+        System.out.println(response2);
+        assertSame(response2.getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
@@ -62,11 +73,12 @@ class CampaignEditorTest {
 
     @Test
     void getById() {
-        System.out.println(campaignEditor.getById(100000L));
+        System.out.println(campaignEditor.getById(100003L));
     }
 
     @Test
     void deleteById() {
+        System.out.println(campaignEditor.deleteById(campId));
     }
 
     @Test
@@ -86,26 +98,27 @@ class CampaignEditorTest {
     }
 
     private MappingDTO testMapping() {
-        MappingFieldDTO id = new MappingFieldDTO(
-                "CLIENTS_PCODE",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(CLIENT_ID.name(),
-                        MappingDataType.INTEGER), null);
-        MappingFieldDTO phone = new MappingFieldDTO(
-                "CALL_TRACKING_PHONE",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(PHONE.name(),
-                        MappingDataType.STRING), null);
-        MappingFieldDTO email = new MappingFieldDTO(
-                "CLIENTS_CLMAIL",
-                MappingFieldType.SYSTEM_FIELD,
-                new ResultDataDTO(EMAIL.name(),
-                        MappingDataType.STRING), null);
-        MappingFieldDTO name = new MappingFieldDTO(
-                "CLIENTS_FIRSTNAME",
-                MappingFieldType.USER_FIELD,
-                new ResultDataDTO("FirstName",
-                        MappingDataType.STRING), null);
+        MappingFieldDTO id = new MappingFieldDTO();
+        id.setSourceName("CLIENTS_PCODE");
+        id.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        id.setResultData(new ResultDataDTO(CLIENT_ID.name(), MappingDataType.INTEGER));
+
+        MappingFieldDTO phone = new MappingFieldDTO();
+        phone.setSourceName("CALL_TRACKING_PHONE");
+        phone.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        phone.setResultData(new ResultDataDTO(PHONE.name(), MappingDataType.STRING));
+
+        MappingFieldDTO email = new MappingFieldDTO();
+        email.setSourceName("CLIENTS_CLMAIL");
+        email.setMappingFieldType(MappingFieldType.SYSTEM_FIELD);
+        email.setResultData(new ResultDataDTO(EMAIL.name(), MappingDataType.STRING));
+
+        MappingFieldDTO name = new MappingFieldDTO();
+        name.setSourceName("CLIENTS_FIRSTNAME");
+        name.setMappingFieldType(MappingFieldType.USER_FIELD);
+        name.setResultData(new ResultDataDTO("FirstName", MappingDataType.STRING));
+
+
         /*MappingFieldDTO birthday = new MappingFieldDTO(
                 "B_DATE",
                 MappingFieldType.USER_FIELD,
@@ -121,17 +134,20 @@ class CampaignEditorTest {
                 MappingFieldType.USER_FIELD,
                 new ResultDataDTO("Color",
                         MappingDataType.STRING), null);*/
-        return new MappingDTO(sourceId,Arrays.asList(id, phone, email, name));
+        MappingDTO mappingDTO = new MappingDTO();
+        mappingDTO.setSourceId(sourceId);
+        mappingDTO.setFields(Arrays.asList(id, phone, email, name));
+        return mappingDTO;
     }
 
     @Test
     void unassignSource() {
-        System.out.println(campaignEditor.unassignSource(campId));
+        System.out.println(campaignEditor.unassignSource(campId, SourcePurpose.PERSONAL));
     }
 
     @Test
     void assignProposal() {
-        System.out.println(campaignEditor.assignProposal(campId, 100000L, ChannelType.EMAIL));
+        System.out.println(campaignEditor.assignProposal(100003L, 100000L, EMAIL));
     }
 
     @Test
@@ -147,6 +163,9 @@ class CampaignEditorTest {
                 .startResponseCollectDate(ZonedDateTime.now().plusMonths(1))
                 .endResponseCollectDate(ZonedDateTime.now().plusMonths(1).plusWeeks(1))
                 .channel(ChannelType.CALL)
+                .campaignCategory(CampaignCategory.ABOUT_NEW_SERVICES)
+                .type(CampaignType.CRM)
+                .agreementComment("agreement comment")
                 .createdBy("egor")
                 .controlGroupPercent(0.0)
                 .proposalId(777L)
@@ -155,12 +174,7 @@ class CampaignEditorTest {
     }
 
     @Test
-    void showFields(){
-        System.out.println(campaignEditor.showFields(campId));
-    }
-
-    @Test
-    void changeQueues(){
-        System.out.println(campaignEditor.setCampaignQueues(campId,EnumSet.of(Queues.CALL_CENTER,Queues.HOVRINO,Queues.MEDVEDKOVO)));
+    void changeQueues() {
+        System.out.println(campaignEditor.setCampaignQueues(campId, EnumSet.of(Queues.CALL_CENTER, Queues.HOVRINO, Queues.MEDVEDKOVO)));
     }
 }

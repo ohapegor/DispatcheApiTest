@@ -3,6 +3,7 @@ package ru.ohapegor.test.sender.proposal;
 import org.junit.jupiter.api.Test;
 import ru.siblion.crm.sender.api.proposal.rest.dto.*;
 import ru.siblion.crm.sender.api.proposal.rest.response.CreateEntityResponse;
+import ru.siblion.crm.sender.api.proposal.rest.response.ResponseStatus;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -19,7 +20,9 @@ class ProposalServiceTest {
 
     @Test
     void create() {
-        System.out.println("response = " + service.create(testProposal()));
+        CreateEntityResponse response = service.create(testProposal());
+        System.out.println("response = " + response);
+        assertSame(response.getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test

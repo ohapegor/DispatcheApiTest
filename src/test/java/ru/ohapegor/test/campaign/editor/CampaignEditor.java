@@ -9,10 +9,11 @@ import ru.siblion.crm.campaign.manager.api.CMCampaignEditorRestApi;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestCampaignEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.QueryParams;
-import ru.siblion.crm.campaign.manager.api.dto.CampaignDTO;
-import ru.siblion.crm.campaign.manager.api.dto.MappingDTO;
-import ru.siblion.crm.campaign.manager.api.dto.enums.ChannelType;
-import ru.siblion.crm.campaign.manager.api.dto.enums.Queues;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.CampaignDTO;
+import ru.siblion.crm.campaign.manager.api.dto.campaign.enums.ChannelType;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingDTO;
+import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SourcePurpose;
+import ru.siblion.crm.campaign.manager.api.dto.participant.enums.Queues;
 import ru.siblion.crm.campaign.manager.api.response.*;
 
 import java.util.EnumSet;
@@ -145,7 +146,7 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
     }
 
     @Override
-    public CMResponse unassignSource(Long campId) {
+    public CMResponse unassignSource(Long campId, SourcePurpose purpose) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.UNASSIGN_SOURCE)
                 .queryParam(QueryParams.CAMP_ID, campId)
                 .build().toUri().toString();
@@ -155,16 +156,6 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
                         CMResponse.class).getBody();
     }
 
-    @Override
-    public ShowFieldsResponse showFields(Long campId) {
-        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.SHOW_FIELDS)
-                .queryParam(QueryParams.CAMP_ID, campId)
-                .build().toUri().toString();
-        LOG.info(URL);
-        return restTemplate
-                .getForEntity(URL,
-                        ShowFieldsResponse.class).getBody();
-    }
 
     @Override
     public CMResponse setCampaignQueues(Long campId, Set<Queues> enumSet) {
@@ -174,6 +165,18 @@ public class CampaignEditor implements CMCampaignEditorRestApi {
         LOG.info(URL);
         return restTemplate
                 .postForEntity(URL,enumSet,
+                        CMResponse.class).getBody();
+    }
+
+    @Override
+    public CMResponse assignGlobalSource(Long campId, Long mappingId) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_EDITOR_ENDPOINT + CMRestCampaignEndpoints.ASSIGN_GLOBAL_SOURCE)
+                .queryParam(QueryParams.CAMP_ID, campId)
+                .queryParam(QueryParams.MAPPING_ID, mappingId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .postForEntity(URL,null,
                         CMResponse.class).getBody();
     }
 }

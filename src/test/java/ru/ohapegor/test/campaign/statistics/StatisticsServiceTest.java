@@ -13,5 +13,14 @@ class StatisticsServiceTest {
         System.out.println(service.getStatistics(campId));
     }
 
+    @Test
+    void showFields() {
+        System.out.println(service.showFieldsTags(campId));
+    }
 
+
+    @Test
+    void showData() {
+        System.out.println(service.showExampleData(campId,10));
+    }
 }
