@@ -39,10 +39,6 @@ class DataApiTest {
     void createContactStrategy() {
         FilterDTO filterDTO = new FilterDTO();
         filterDTO.setFilterName("test");
-        BehavioralPredicate predicate = new BehavioralPredicate();
-        predicate.setNextConditional(ConditionsEnum.AND);
-        predicate.setRelation("contains");
-        predicate.setOperand("RUNNING");
 
         RelationDTO relationDTO = new RelationDTO();
         relationDTO.setField(true);
@@ -50,9 +46,11 @@ class DataApiTest {
         relationDTO.setOperandType(OperandType.STRING);
         relationDTO.setRelation("contains");
         relationDTO.setOperandB("RUNNING");
-        predicate.setBehavioralField(BehavioralFieldsEnum.CAMPAIGN_STATUS);
+
+
         filterDTO.setRelationBehaviouralList(Collections.singletonList(relationDTO));
         filterDTO.setRelationDTOs(Collections.emptyList());
+
         System.out.println(dataApi.createContactStrategy(filterDTO));
     }
 }

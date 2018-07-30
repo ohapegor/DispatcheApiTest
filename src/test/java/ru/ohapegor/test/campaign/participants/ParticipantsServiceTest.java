@@ -16,6 +16,7 @@ import ru.siblion.crm.campaign.manager.api.dto.participant.enums.Queues;
 import ru.siblion.crm.campaign.manager.api.dto.participant.enums.RespondType;
 import ru.siblion.crm.campaign.manager.api.dto.participant.enums.TransportStatus;
 import ru.siblion.crm.campaign.manager.api.request.ClientParticipationsRequest;
+import ru.siblion.crm.campaign.manager.api.request.GetCallRecordsRequest;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -30,11 +31,11 @@ class ParticipantsServiceTest {
     private Long clientId = 777L;
     private Long clientId2 = 60006200L;
     private Long clientId3 = 990000188L;
-    private Long participationId = 100012L;
+    private Long participationId = 100015L;
 
     @Test
     void getParticipants() {
-        System.out.println(service.getParticipants(campId));
+        System.out.println(service.getCampaignParticipations(campId));
     }
 
 
@@ -45,7 +46,7 @@ class ParticipantsServiceTest {
 
     @Test
     void getActiveCallRecords() {
-        System.out.println(service.getActiveCallRecords("",EnumSet.of(Queues.NEKRASOVKA)));
+        System.out.println(service.getActiveCallRecords("", new GetCallRecordsRequest(EnumSet.of(Queues.NEKRASOVKA))));
     }
 
     @Test
@@ -69,8 +70,8 @@ class ParticipantsServiceTest {
     }
 
     @Test
-    void clientParticipations(){
-        ClientParticipationsRequest request = ClientParticipationsRequestBuilder.forClients(Arrays.asList(clientId,clientId2,clientId3))
+    void clientParticipations() {
+        ClientParticipationsRequest request = ClientParticipationsRequestBuilder.forClients(Arrays.asList(clientId, clientId2, clientId3))
                 .withChannels(EnumSet.of(ChannelType.CALL))
                 .withRespondTypes(EnumSet.of(RespondType.NOT_RECEIVED))
                 .withTransportStatuses(EnumSet.of(TransportStatus.REQUESTED_TO_SEND))
@@ -81,7 +82,7 @@ class ParticipantsServiceTest {
     }
 
     @Test
-    void filter(){
+    void filter() {
         BehavioralPredicate p1 = new BehavioralPredicate();
         p1.setNextConditional(ConditionsEnum.OR);
         p1.setOperand(CampaignStatus.RUNNING.name());
@@ -95,13 +96,23 @@ class ParticipantsServiceTest {
         p2.setBehavioralField(BehavioralFieldsEnum.TRANSPORT_STATUS);
 
         BehavioralFilter filter = new BehavioralFilter();
-        filter.setPredicates(Arrays.asList(p1,p2));
+        filter.setPredicates(Arrays.asList(p1, p2));
 
-        List<Long> ids = Arrays.asList(20000288L,40000389L,990000188L,60006200L);
+        List<Long> ids = Arrays.asList(20000288L, 40000389L, 990000188L, 60006200L);
         BehavioralFilterRequest request = new BehavioralFilterRequest();
         request.setClientIds(ids);
         request.setFilter(filter);
 
         System.out.println("service.getParticipations(request) = " + service.getParticipations(request));
+    }
+
+    @Test
+    void assignCallCardToUser() {
+        System.out.println(service.assignCallCardToUser(participationId, "egor"));
+    }
+
+    @Test
+    void unassignCallCardToUser() {
+        System.out.println(service.unassignCallCardToUser(participationId));
     }
 }

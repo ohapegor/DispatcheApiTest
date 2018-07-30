@@ -3,26 +3,21 @@ package ru.ohapegor.test.campaign.efficiency;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.ohapegor.test.campaign.AbstractCMService;
 import ru.ohapegor.test.campaign.editor.CampaignEditor;
 import ru.siblion.crm.campaign.manager.api.CMEfficiencyRestApi;
-import ru.siblion.crm.campaign.manager.api.constants.CMRestCampaignEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestEfficiencyEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.QueryParams;
 import ru.siblion.crm.campaign.manager.api.dto.efficency.EffFactorDTO;
 import ru.siblion.crm.campaign.manager.api.response.CMResponse;
-import ru.siblion.crm.campaign.manager.api.response.CalculateResponse;
-import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
-import ru.siblion.crm.campaign.manager.api.response.DoubleResponse;
-import ru.siblion.crm.campaign.manager.api.response.EffFactorsListResponse;
 
 import java.time.ZonedDateTime;
+import java.util.List;
+import java.util.Map;
 
-public class EfficiencyService implements CMEfficiencyRestApi {
-
-    private static final RestTemplate restTemplate = new RestTemplate();
+public class EfficiencyService  extends AbstractCMService implements CMEfficiencyRestApi {
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignEditor.class);
 
@@ -31,35 +26,35 @@ public class EfficiencyService implements CMEfficiencyRestApi {
 
 
     @Override
-    public CreateEntityResponse createEffFactor(Long campId, EffFactorDTO effFactorDTO) {
+    public CMResponse<Long> createEffFactor(Long campId, EffFactorDTO effFactorDTO) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.CREATE_EFF_FACTOR)
                 .queryParam(QueryParams.CAMP_ID,campId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .postForEntity(URL,
                         effFactorDTO,
-                        CreateEntityResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse editEffFactor(EffFactorDTO effFactorDTO) {
+    public CMResponse<Void> editEffFactor(EffFactorDTO effFactorDTO) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.EDIT_EFF_FACTOR)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .postForEntity(URL,
                         effFactorDTO,
-                        CreateEntityResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse removeEffFactor(Long factId) {
+    public CMResponse<Void> removeEffFactor(Long factId) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.DELETE_EFF_FACTOR)
                 .queryParam(QueryParams.EFF_FACT_ID, factId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .exchange(URL,
                         HttpMethod.DELETE,
                         null,
@@ -67,57 +62,57 @@ public class EfficiencyService implements CMEfficiencyRestApi {
     }
 
     @Override
-    public DoubleResponse calculateFactor(Long factId) {
+    public CMResponse<Double> calculateFactor(Long factId) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.CALCULATE_FACTOR)
                 .queryParam(QueryParams.EFF_FACT_ID, factId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .getForEntity(URL,
-                        DoubleResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CalculateResponse calculateAllFactors(Long campId) {
+    public CMResponse<Map<String, Double>> calculateAllFactors(Long campId) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.CALCULATE_ALL_FACTORS)
                 .queryParam(QueryParams.CAMP_ID, campId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .getForEntity(URL,
-                        CalculateResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public EffFactorsListResponse getEffFactors(Long campId) {
+    public CMResponse<List<EffFactorDTO>> getEffFactors(Long campId) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.GET_FOR_CAMPAIGN)
                 .queryParam(QueryParams.CAMP_ID, campId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .getForEntity(URL,
-                        EffFactorsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse changeStartResponseCollectDate(Long campId, ZonedDateTime zonedDateTime) {
+    public CMResponse<Void> changeStartResponseCollectDate(Long campId, ZonedDateTime zonedDateTime) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.CHANGE_START_RESPONSE_COLLECT_DATE)
                 .queryParam(QueryParams.CAMP_ID, campId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .postForEntity(URL,
                         zonedDateTime,
                         CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse changeEndResponseCollectDate(Long campId, ZonedDateTime zonedDateTime) {
+    public CMResponse<Void> changeEndResponseCollectDate(Long campId, ZonedDateTime zonedDateTime) {
         String URL = UriComponentsBuilder.fromHttpUrl(EFF_ENDPOINT + CMRestEfficiencyEndpoints.CHANGE_END_RESPONSE_COLLECT_DATE)
                 .queryParam(QueryParams.CAMP_ID, campId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .postForEntity(URL,
                         zonedDateTime,
                         CMResponse.class).getBody();

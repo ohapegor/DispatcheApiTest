@@ -4,6 +4,7 @@ package ru.ohapegor.test.offlineMarketing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;
@@ -26,8 +27,9 @@ public class DataApi {
     }
 
     public boolean createContactStrategy(FilterDTO filterDTO) {
-        return restTemplate.postForEntity(String.format("%s/%s/%s", UPLOAD_ENDPOINT, "filter", "createContactStrategy"),
-                filterDTO, Boolean.class).getBody();
+         return restTemplate.postForEntity(String.format("%s/%s/%s?recountAudiences=false", UPLOAD_ENDPOINT, "filter", "createContactStrategy")
+                 ,filterDTO,Object.class).getStatusCode() == HttpStatus.OK;
+
     }
 
     public boolean deleteContactStrategy() {

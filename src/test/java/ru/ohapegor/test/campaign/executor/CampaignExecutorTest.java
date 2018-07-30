@@ -8,17 +8,18 @@ class CampaignExecutorTest {
 
     private static final CampaignExecutor executor = new CampaignExecutor();
 
-    private static final Long campId = 100000L;
+    private static final Long campId = 100059L;
 
     @Test
     void scheduleStart() {
-        System.out.println(executor.scheduleStart(campId));
+        System.out.println(executor.startCampaignScheduled(campId));
     }
 
     @Test
     void startNow() {
-        System.out.println(executor.startNow(campId));
+        System.out.println(executor.startCampaignNow(campId));
     }
+
 
     @Test
     void collectStatistics() {
@@ -26,12 +27,22 @@ class CampaignExecutorTest {
     }
 
     @Test
-    void stop() {
-        System.out.println(executor.stop(campId));
+    void pause() {
+        System.out.println(executor.pause(campId));
     }
 
     @Test
     void finish() {
         System.out.println(executor.finish(campId));
+    }
+
+    @Test
+    void cancell() {
+        System.out.println(executor.finish(campId));
+    }
+
+    @Test
+    void resume() {
+        System.out.println(executor.resume(campId));
     }
 }

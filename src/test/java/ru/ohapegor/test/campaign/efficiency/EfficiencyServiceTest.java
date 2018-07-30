@@ -10,8 +10,7 @@ import ru.ohapegor.test.TestApplication;
 import ru.siblion.crm.campaign.manager.api.dto.efficency.EffFactorDTO;
 import ru.siblion.crm.campaign.manager.api.dto.efficency.enums.Aim;
 import ru.siblion.crm.campaign.manager.api.dto.efficency.enums.Units;
-import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
-import ru.siblion.crm.campaign.manager.api.response.DoubleResponse;
+import ru.siblion.crm.campaign.manager.api.response.CMResponse;
 import ru.siblion.crm.campaign.manager.api.response.ResponseStatus;
 
 import java.time.ZonedDateTime;
@@ -25,20 +24,20 @@ class EfficiencyServiceTest {
 
     public static final Long campId = 100000L;
 
-    public static final Long facId1 = 100005L;
+    public static final Long facId1 = 100008L;
 
-    public static final Long facId2 = 100006L;
+    public static final Long facId2 = 100009L;
 
-    public static final Long resMapId1 = 100003L;
+    public static final Long resMapId1 = 100006L;
     public static final Long resMapId2 = 100004L;
 
     @Test
     void createEffFactors() {
-        CreateEntityResponse response1 = service.createEffFactor(campId, incomeFactor1());
+        CMResponse response1 = service.createEffFactor(campId, incomeFactor1());
         System.out.println(response1);
         assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
 
-        CreateEntityResponse response2 = service.createEffFactor(campId, incomeFactor2());
+        CMResponse response2 = service.createEffFactor(campId, incomeFactor2());
         System.out.println(response2);
         assertSame(response2.getStatus(),ResponseStatus.SUCCESS);
         //System.out.println(service.createEffFactor(campId, expenseFactor1()));
@@ -47,10 +46,10 @@ class EfficiencyServiceTest {
 
     @Test
     void editEffFactor() {
-        Long factId = 100004L;
+        Long factId = 100030L;
         EffFactorDTO factorDTO = incomeFactor1();
-        factorDTO.setUnits(Units.RUBLE);
-        factorDTO.setName("new name");
+        factorDTO.setName("test1");
+        factorDTO.setFactValue(92.0);
         factorDTO.setId(factId);
         System.out.println(service.editEffFactor(factorDTO));
     }
@@ -62,14 +61,14 @@ class EfficiencyServiceTest {
 
     @Test
     void calculateFactor1() {
-        DoubleResponse response = service.calculateFactor(facId1);
+        CMResponse response = service.calculateFactor(facId1);
         System.out.println(response);
         assertSame(response.getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
     void calculateFactor2() {
-        DoubleResponse response = service.calculateFactor(facId2);
+        CMResponse response = service.calculateFactor(facId2);
         System.out.println(response);
         assertSame(response.getStatus(),ResponseStatus.SUCCESS);
     }
@@ -111,9 +110,9 @@ class EfficiencyServiceTest {
         EffFactorDTO factorDTO = new EffFactorDTO();
         factorDTO.setAim(Aim.INCOME);
         factorDTO.setCalculated(true);
-        factorDTO.setMappingId(resMapId2);
+        factorDTO.setMappingId(resMapId1);
         factorDTO.setPlanValue(10.0);
-        factorDTO.setName("income_factor_2");
+        factorDTO.setName("income_factor_21");
         factorDTO.setUnits(Units.ITEM);
         factorDTO.setPerPerson(false);
         factorDTO.setWhereInConstraint(Arrays.asList("Егор", "Михаил"));

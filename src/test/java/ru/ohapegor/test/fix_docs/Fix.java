@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 
 public class Fix {
 
-    private String directory = "C:/Egor/Soft/JavaPrograms";
+    private String directory = "C:/Egor/Work/med";
 
     @Test
     void fix() throws IOException {
@@ -28,18 +28,20 @@ public class Fix {
 
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
-                System.err.println("visit : "+file);
-                String content = new String(Files.readAllBytes(file));
-                if (content.contains("\r")) {
-                    int count = 0;
-                    for (char c : content.toCharArray()) {
-                        if (c == '\r') {
-                            count++;
+                if (file.toString().contains(".sh")) {
+                    System.err.println("visit : " + file);
+                    String content = new String(Files.readAllBytes(file));
+                    if (content.contains("\r")) {
+                        int count = 0;
+                        for (char c : content.toCharArray()) {
+                            if (c == '\r') {
+                                count++;
+                            }
                         }
+                        System.err.println(String.format("found '%d' '\\r' in '%s'", count, file));
+                        String fixed = content.replaceAll("\r", "");
+                        Files.write(file, fixed.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                     }
-                    System.err.println(String.format("found '%d' '\\r' in '%s'", count, file));
-                    String fixed = content.replaceAll("\r", "");
-                    Files.write(file, fixed.getBytes(), StandardOpenOption.TRUNCATE_EXISTING);
                 }
                 return FileVisitResult.CONTINUE;
             }

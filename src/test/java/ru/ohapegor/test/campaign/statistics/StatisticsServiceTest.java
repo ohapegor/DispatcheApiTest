@@ -23,4 +23,9 @@ class StatisticsServiceTest {
     void showData() {
         System.out.println(service.showExampleData(campId,10));
     }
+
+    @Test
+    void getCampaignDeliveries(){
+        System.out.println(service.getCampaignDeliveries(campId));
+    }
 }

@@ -1,0 +1,1 @@
+ select "CLIENTS"."PCODE", "TREAT"."PCODE" from "CLIENTS" join "TREAT" on "CLIENTS"."PCODE" = "TREAT"."PCODE"  rows (0 + 1) to (0 + 10)

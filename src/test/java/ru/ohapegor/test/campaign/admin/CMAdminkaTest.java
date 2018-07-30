@@ -13,7 +13,7 @@ import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingDataType;
 import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.MappingFieldType;
 import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SourcePurpose;
 import ru.siblion.crm.campaign.manager.api.dto.mapping.enums.SystemFields;
-import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
+import ru.siblion.crm.campaign.manager.api.response.CMResponse;
 import ru.siblion.crm.campaign.manager.api.response.ResponseStatus;
 
 import java.time.ZonedDateTime;
@@ -36,17 +36,17 @@ class CMAdminkaTest {
         mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
         mappingDTO.setSourcePurpose(SourcePurpose.PERSONAL);
 
-        CreateEntityResponse response1 = adminka.addGlobalDataSource(mappingDTO);
+        CMResponse<Long> response1 = adminka.addGlobalDataSource(mappingDTO);
         assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
-        assertSame(adminka.activateDataSource(response1.getId()).getStatus(),ResponseStatus.SUCCESS);
+        assertSame(adminka.activateDataSource(response1.getDto()).getStatus(),ResponseStatus.SUCCESS);
 
 
 
         mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
         mappingDTO.setSourcePurpose(SourcePurpose.SCHEDULE);
-        CreateEntityResponse response3 = adminka.addGlobalDataSource(mappingDTO);
+        CMResponse<Long> response3 = adminka.addGlobalDataSource(mappingDTO);
         assertSame(response3.getStatus(),ResponseStatus.SUCCESS);
-        assertSame(adminka.activateDataSource(response3.getId()).getStatus(),ResponseStatus.SUCCESS);
+        assertSame(adminka.activateDataSource(response3.getDto()).getStatus(),ResponseStatus.SUCCESS);
     }
 
     @Test
@@ -54,7 +54,7 @@ class CMAdminkaTest {
         MappingDTO mappingDTO = testMapping();
         mappingDTO.setName(String.format("testMapping[%s]",ZonedDateTime.now()));
         mappingDTO.setSourcePurpose(SourcePurpose.PERSONAL);
-        CreateEntityResponse response = adminka.addGlobalDataSource(mappingDTO);
+        CMResponse response = adminka.addGlobalDataSource(mappingDTO);
         System.out.println(response);
         assertSame(response.getStatus(),ResponseStatus.SUCCESS);
     }
@@ -62,12 +62,12 @@ class CMAdminkaTest {
     @Test
     void assignReportlSources(){
         ResultMappingDTO resultMappingDTO = testResultMapping1();
-        CreateEntityResponse response1 = adminka.addGlobalResultDataSource(resultMappingDTO);
+        CMResponse response1 = adminka.addGlobalResultDataSource(resultMappingDTO);
         System.out.println(response1);
         assertSame(response1.getStatus(),ResponseStatus.SUCCESS);
 
         ResultMappingDTO resultMappingDTO2 = testResultMapping2();
-        CreateEntityResponse response2 = adminka.addGlobalResultDataSource(resultMappingDTO2);
+        CMResponse response2 = adminka.addGlobalResultDataSource(resultMappingDTO2);
         System.out.println(response2);
         assertSame(response2.getStatus(),ResponseStatus.SUCCESS);
     }

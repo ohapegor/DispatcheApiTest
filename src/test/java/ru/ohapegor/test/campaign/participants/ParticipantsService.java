@@ -13,11 +13,10 @@ import ru.siblion.crm.campaign.manager.api.dto.participant.ParticipationDTO;
 import ru.siblion.crm.campaign.manager.api.dto.participant.enums.Queues;
 import ru.siblion.crm.campaign.manager.api.dto.participant.enums.TransportStatus;
 import ru.siblion.crm.campaign.manager.api.request.ClientParticipationsRequest;
+import ru.siblion.crm.campaign.manager.api.request.GetCallRecordsRequest;
 import ru.siblion.crm.campaign.manager.api.response.CMResponse;
-import ru.siblion.crm.campaign.manager.api.response.CallCardResponse;
-import ru.siblion.crm.campaign.manager.api.response.ClientsListResponse;
-import ru.siblion.crm.campaign.manager.api.response.ParticipationsListResponse;
 
+import java.util.List;
 import java.util.Set;
 
 public class ParticipantsService implements CMParticipantsRestApi {
@@ -31,18 +30,18 @@ public class ParticipantsService implements CMParticipantsRestApi {
 
 
     @Override
-    public ParticipationsListResponse getParticipants(Long campId) {
+    public CMResponse getCampaignParticipations(Long campId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.GET_FOR_CAMPAIGN)
                 .queryParam(QueryParams.CAMP_ID,campId)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
                 .getForEntity(URL,
-                        ParticipationsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public ParticipationsListResponse getClientCallRecords(Long clientId, TransportStatus transportStatus) {
+    public CMResponse getClientCallRecords(Long clientId, TransportStatus transportStatus) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.GET_CLIENT_CALLS)
                 .queryParam(QueryParams.CLIENT_ID,clientId)
                 .queryParam(QueryParams.TRANSPORT_STATUS,transportStatus)
@@ -50,55 +49,73 @@ public class ParticipantsService implements CMParticipantsRestApi {
         LOG.info(URL);
         return restTemplate
                 .getForEntity(URL,
-                        ParticipationsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public ParticipationsListResponse getClientParticipations(ClientParticipationsRequest clientPatricipationsRequest) {
+    public CMResponse getClientParticipations(ClientParticipationsRequest clientPatricipationsRequest) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.GET_CLIENT_PARTICIPATIONS)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
                 .postForEntity(URL,clientPatricipationsRequest,
-                        ParticipationsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public ClientsListResponse getParticipations(BehavioralFilterRequest fBehavioralFilterRequest) {
+    public CMResponse<List<Long>> getParticipations(BehavioralFilterRequest fBehavioralFilterRequest) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.FILTER_PARTICIPATNS)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
                 .postForEntity(URL,fBehavioralFilterRequest,
-                        ClientsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public ParticipationsListResponse getAllCallRecords(Set<Queues> set) {
-        return null;
+    public CMResponse<List<ParticipationDTO>> getAllCallRecords(GetCallRecordsRequest getCallRecordsRequest) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.GET_ALL_CALLS)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .postForEntity(URL,getCallRecordsRequest,
+                        CMResponse.class).getBody();
     }
 
+
     @Override
-    public ParticipationsListResponse getActiveCallRecords(String user, Set<Queues> queues) {
+    public CMResponse getActiveCallRecords(String user, GetCallRecordsRequest request) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.EDIT)
                 .queryParam(QueryParams.USER,user)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
-                .postForEntity(URL,queues,
-                        ParticipationsListResponse.class).getBody();
+                .postForEntity(URL,request,
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse assignCallParticipatipationToUser(Long participationId, String user) {
-        return null;
+    public CMResponse assignCallCardToUser(Long partId, String user) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.ASSIGN_CARD_TO_USER)
+                .queryParam(QueryParams.USER,user)
+                .queryParam(QueryParams.PARTICIPATION_ID,partId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .getForEntity(URL,
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse unassignCallParticipatipationToUser(Long participationId) {
-        return null;
+    public CMResponse unassignCallCardToUser(Long partId) {
+        String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.UNASSIGN_CARD)
+                .queryParam(QueryParams.PARTICIPATION_ID,partId)
+                .build().toUri().toString();
+        LOG.info(URL);
+        return restTemplate
+                .getForEntity(URL,
+                        CMResponse.class).getBody();
     }
-
 
 
     @Override
@@ -108,18 +125,18 @@ public class ParticipantsService implements CMParticipantsRestApi {
         LOG.info(URL);
         return restTemplate
                 .postForEntity(URL,participationDTO,
-                        ParticipationsListResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CallCardResponse getCallCard(Long partId) {
+    public CMResponse getCallCard(Long partId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_PARTICIPANTS_ENDPOINT + CMRestParticipantsEndpoints.GET_CALL_CARD)
                 .queryParam(QueryParams.PARTICIPATION_ID,partId)
                 .build().toUri().toString();
         LOG.info(URL);
         return restTemplate
                 .getForEntity(URL,
-                        CallCardResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
 }

@@ -11,7 +11,7 @@ import java.nio.file.attribute.BasicFileAttributes;
 
 public class Test {
 
-    private static String directory = "C:/Egor/JavaPrograms/";
+    private static String directory = "C:/Egor/Work/med/environment";
 
     public static void main(String[] args) throws IOException {
         Files.walkFileTree(Paths.get(directory), new FileVisitor<Path>() {
@@ -23,7 +23,7 @@ public class Test {
             @Override
             public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                 try {
-                    if (file.toString().contains("run.sh")) {
+                    if (file.toString().contains("Dockerfile")|| file.toString().contains(".sh")) {
                         String content = new String(Files.readAllBytes(file));
                         if (content.contains("\r")) {
                             int count = 0;

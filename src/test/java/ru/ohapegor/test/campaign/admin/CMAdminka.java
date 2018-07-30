@@ -3,23 +3,23 @@ package ru.ohapegor.test.campaign.admin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpMethod;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
+import ru.ohapegor.test.campaign.AbstractCMService;
 import ru.ohapegor.test.campaign.editor.CampaignEditor;
 import ru.siblion.crm.campaign.manager.api.CMAdminRestApi;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestAdminEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.CMRestEndpoints;
 import ru.siblion.crm.campaign.manager.api.constants.QueryParams;
+import ru.siblion.crm.campaign.manager.api.dto.admin.CMAdminDataDTO;
 import ru.siblion.crm.campaign.manager.api.dto.efficency.mapping.ResultMappingDTO;
 import ru.siblion.crm.campaign.manager.api.dto.mapping.MappingDTO;
 import ru.siblion.crm.campaign.manager.api.response.CMResponse;
-import ru.siblion.crm.campaign.manager.api.response.CreateEntityResponse;
-import ru.siblion.crm.campaign.manager.api.response.PersonalFieldsResponse;
-import ru.siblion.crm.campaign.manager.api.response.ShowAdminDataResponse;
 
-public class CMAdminka implements CMAdminRestApi {
+import java.util.Map;
 
-    private static final RestTemplate restTemplate = new RestTemplate();
+@SuppressWarnings("unckecked")
+public class CMAdminka extends AbstractCMService implements CMAdminRestApi {
+
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignEditor.class);
 
@@ -28,86 +28,87 @@ public class CMAdminka implements CMAdminRestApi {
 
 
     @Override
-    public CreateEntityResponse addGlobalDataSource(MappingDTO mappingDTO) {
+    @SuppressWarnings("unckecked")
+    public CMResponse<Long> addGlobalDataSource(MappingDTO mappingDTO) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.ADD_GLOBAL_SOURCE)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,mappingDTO,
-                        CreateEntityResponse.class).getBody();
+        return REST_TEMPLATE
+                .postForEntity(URL, mappingDTO,
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CreateEntityResponse addGlobalResultDataSource(ResultMappingDTO resultMappingDTO) {
+    public CMResponse<Long> addGlobalResultDataSource(ResultMappingDTO resultMappingDTO) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.ADD_GLOBAL_RESULT_SOURCE)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,resultMappingDTO,
-                        CreateEntityResponse.class).getBody();
+        return REST_TEMPLATE
+                .postForEntity(URL, resultMappingDTO,
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse removeGlobalDataSource(Long mappingId) {
+    public CMResponse<Void> removeGlobalDataSource(Long mappingId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.REMOVE_SOURCE)
-                .queryParam(QueryParams.MAPPING_ID,mappingId)
+                .queryParam(QueryParams.MAPPING_ID, mappingId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .exchange(URL,HttpMethod.DELETE,null,
+        return REST_TEMPLATE
+                .exchange(URL, HttpMethod.DELETE, null,
                         CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse removeResultGlobalDataSource(Long mappingId) {
+    public CMResponse<Void> removeResultGlobalDataSource(Long mappingId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.REMOVE_RESULT_SOURCE)
-                .queryParam(QueryParams.MAPPING_ID,mappingId)
+                .queryParam(QueryParams.MAPPING_ID, mappingId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .exchange(URL,HttpMethod.DELETE,null,
+        return REST_TEMPLATE
+                .exchange(URL, HttpMethod.DELETE, null,
                         CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse activateDataSource(Long mappingId) {
+    public CMResponse<Void> activateDataSource(Long mappingId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.ACTIVATE_SOURCE)
-                .queryParam(QueryParams.MAPPING_ID,mappingId)
+                .queryParam(QueryParams.MAPPING_ID, mappingId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,null,
+        return REST_TEMPLATE
+                .postForEntity(URL, null,
                         CMResponse.class).getBody();
     }
 
     @Override
-    public CMResponse deactivateDataSource(Long mappingId) {
+    public CMResponse<Void> deactivateDataSource(Long mappingId) {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.ACTIVATE_SOURCE)
-                .queryParam(QueryParams.MAPPING_ID,mappingId)
+                .queryParam(QueryParams.MAPPING_ID, mappingId)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
-                .postForEntity(URL,null,
+        return REST_TEMPLATE
+                .postForEntity(URL, null,
                         CMResponse.class).getBody();
     }
 
     @Override
-    public ShowAdminDataResponse showAdminData() {
+    public CMResponse<CMAdminDataDTO> showAdminData() {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.SHOW_ADMIN_DATA)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .getForEntity(URL,
-                        ShowAdminDataResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 
     @Override
-    public PersonalFieldsResponse showFields() {
+    public CMResponse<Map<String, String>> showFields() {
         String URL = UriComponentsBuilder.fromHttpUrl(CM_ADMIN_ENDPOINT + CMRestAdminEndpoints.SHOW_FIELDS)
                 .build().toUri().toString();
         LOG.info(URL);
-        return restTemplate
+        return REST_TEMPLATE
                 .getForEntity(URL,
-                        PersonalFieldsResponse.class).getBody();
+                        CMResponse.class).getBody();
     }
 }

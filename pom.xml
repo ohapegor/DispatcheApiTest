@@ -32,14 +32,30 @@
 
         <api.dispatch.version>1.0.4-SNAPSHOT</api.dispatch.version>
         <api.proposal.version>1.0.2-SNAPSHOT</api.proposal.version>
-        <api.campaign.version>1.0.17-SNAPSHOT</api.campaign.version>
+        <api.campaign.version>1.1.6-SNAPSHOT</api.campaign.version>
 
         <!--logging-->
         <logback.version>1.2.3</logback.version>
         <jansi.version>1.17.1</jansi.version>
+        <crm.source.api>0.0.1-SNAPSHOT</crm.source.api>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>ru.siblion.crm</groupId>
+            <artifactId>sql-builder-lib</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.siblion.crm</groupId>
+            <artifactId>crm-data-gateway-api</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>ru.siblion.crm</groupId>
+            <artifactId>crm-source-api</artifactId>
+            <version>${crm.source.api}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -96,26 +112,22 @@
             <groupId>org.fusesource.jansi</groupId>
             <artifactId>jansi</artifactId>
             <version>${jansi.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>ru.siblion.crm</groupId>
             <artifactId>crm-sender-api-proposal</artifactId>
             <version>${api.proposal.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ru.siblion.crm</groupId>
             <artifactId>crm-sender-api-dispatch</artifactId>
             <version>${api.dispatch.version}</version>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ru.siblion.crm</groupId>
             <artifactId>crm-campaign-manager-api</artifactId>
             <version>${api.campaign.version}</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
